@@ -14,7 +14,7 @@ function BlogEditor() {
     if (current) {
       form.setFieldsValue({ title: current.title, content: current.content });
     } else {
-      form.resetFields();
+      form.setFieldsValue({ title: '', content: '' });
     }
   }, [current, form]);
 
@@ -31,12 +31,23 @@ function BlogEditor() {
   return (
     <div>
       <Title level={2}>{current ? '编辑博客' : '新建博客'}</Title>
-      <Form form={form} layout="vertical" onFinish={handleFinish}>
-        <Form.Item name="title" label="标题" rules={[{ required: true, message: '请输入标题' }]}> <Input /> </Form.Item>
-        <Form.Item name="content" label="内容 (Markdown)" rules={[{ required: true, message: '请输入内容' }]}> <Input.TextArea rows={10} /> </Form.Item>
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={values => {
+          handleFinish(values);
+          form.resetFields();
+        }}
+      >
+        <Form.Item name="title" label="标题" rules={[{ required: true, message: '请输入标题' }]}>
+          <Input />
+        </Form.Item>
+        <Form.Item name="content" label="内容 (Markdown)" rules={[{ required: true, message: '请输入内容' }]}>
+          <Input.TextArea rows={10} />
+        </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">保存</Button>
-          <Button style={{ marginLeft: 8 }} onClick={() => { dispatch(setView('list')); dispatch(setCurrent(null)); }}>取消</Button>
+          <Button style={{ marginLeft: 8 }} onClick={() => { dispatch(setView('list')); dispatch(setCurrent(null)); form.resetFields(); }}>取消</Button>
         </Form.Item>
       </Form>
     </div>
